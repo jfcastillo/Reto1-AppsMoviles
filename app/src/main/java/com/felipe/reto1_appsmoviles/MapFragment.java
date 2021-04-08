@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 
@@ -51,9 +53,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.mapfragment); // ?
         mapFragment.getMapAsync(this); // ?
         // Inflate the layout for this fragment
-        //locationManager = (LocationManager)  this.getSystemService(Context.LOCATION_SERVICE); Esta chimbada solo es cuando es una Activity
+        //locationManager = (LocationManager)  this.getSystemService(LOCATION_SERVICE); //Esta chimbada solo es cuando es una Activity
 
-        //locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         return view;
     }
 
@@ -64,27 +66,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
-        //initLocation();
+        initLocation();
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //LatLng sydney = new LatLng(-34, 151);
+        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
     }
-    //@SuppressLint("MissingPermission")
-    /**public void initLocation(){
+    @SuppressLint("MissingPermission")
+    public void initLocation(){
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 2, new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                //mMap.addMarker(new MarkerOptions().position(pos));
+                mMap.addMarker(new MarkerOptions().position(pos));
                 myMarker.setPosition(pos);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
             }
 
-            //
+
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -100,6 +102,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onProviderDisabled(@NonNull String provider) {
 
             }
+
+            public void updateMyLocation(Location loc){
+
+            }
         });
-    }*/
+
+
+
+        }
+
 }
