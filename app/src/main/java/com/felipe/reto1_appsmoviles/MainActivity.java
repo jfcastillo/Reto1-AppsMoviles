@@ -39,9 +39,14 @@ public class MainActivity extends AppCompatActivity {
             //Intent intent = new Intent(this, MapsActivity.class);
             //startActivity(intent);
 
-            addplace = AddPlaceFragment.newInstance();
-            mapFragment = MapFragment.newInstance();
+
+
             searchPlacesFragment = SearchPlacesFragment.newInstance();
+            addplace = AddPlaceFragment.newInstance();
+            addplace.setMainActivity(this);
+            addplace.setObserver(searchPlacesFragment);
+            mapFragment = MapFragment.newInstance();
+            mapFragment.setObserver(addplace);
             showFragment(addplace);
 
 
@@ -71,5 +76,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
+    }
+
+    public MapFragment getMapFragment() {
+        return mapFragment;
+    }
+
+    public void setMapFragment(MapFragment mapFragment) {
+        this.mapFragment = mapFragment;
     }
 }

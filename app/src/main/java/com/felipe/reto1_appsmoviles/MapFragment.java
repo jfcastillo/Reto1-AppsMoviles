@@ -27,11 +27,13 @@ import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
     private LocationManager locationManager;
     private Marker myMarker;
+
+    private OnMapListener observer;
 
     public MapFragment() {
         // Required empty public constructor
@@ -74,6 +76,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
+        mMap.setOnMapLongClickListener(this);
     }
     @SuppressLint("MissingPermission")
     public void initLocation(){
@@ -112,4 +115,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         }
 
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+       //mMap.addMarker(new MarkerOptions().position(latLng));
+        observer.onNewMarker(latLng);
+    }
+    public interface OnMapListener{
+        void onNewMarker(LatLng latLng);
+    }
+
+    public void setObserver(OnMapListener observer) {
+        this.observer = observer;
+    }
 }

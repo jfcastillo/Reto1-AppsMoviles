@@ -3,6 +3,7 @@ package com.felipe.reto1_appsmoviles;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,7 +18,12 @@ public class SearchPlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public SearchPlacesAdapter() {
         places = new ArrayList<>();
         places.add(new Place("Estadio Pascual Guerrero", "4.0"));
-        places.add(new Place("Tardes Caleñas", "4.0"));
+        //places.add(new Place("Tardes Caleñas", "4.0"));
+    }
+
+    public void addPlace(String name, String rate){
+        places.add(new Place(name, rate));
+        this.notifyDataSetChanged();
     }
 
     @NonNull
@@ -25,7 +31,9 @@ public class SearchPlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public PlaceView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View row = inflater.inflate(R.layout.placerow, null);
+
+        View row = inflater.inflate(R.layout.placerow, parent, false);
+        //View row = inflater.inflate(R.layout.placerow, null);
         ConstraintLayout rowroot = (ConstraintLayout) row;
         PlaceView placeView = new PlaceView(rowroot);
 
