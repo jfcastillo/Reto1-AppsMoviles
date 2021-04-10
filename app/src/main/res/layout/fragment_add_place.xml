@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/editTextNamePlace"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="57dp"
@@ -70,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNamePlace"
         app:srcCompat="@drawable/pin_map" />
 
     <TextView
@@ -117,5 +117,5 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="34dp"
         app:layout_constraintStart_toEndOf="@+id/btnPinMap"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNamePlace" />
 </androidx.constraintlayout.widget.ConstraintLayout>
