@@ -2,6 +2,7 @@ package com.felipe.reto1_appsmoviles;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
@@ -118,10 +123,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onMapLongClick(LatLng latLng) {
        //mMap.addMarker(new MarkerOptions().position(latLng));
-        observer.onNewMarker(latLng);
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            String address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0);
+            Log.e(">>>","Direccion "+address);
+            observer.onNewMarker(latLng, address);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
     public interface OnMapListener{
-        void onNewMarker(LatLng latLng);
+        void onNewMarker(LatLng latLng, String address);
     }
 
     public void setObserver(OnMapListener observer) {

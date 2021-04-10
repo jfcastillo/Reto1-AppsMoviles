@@ -1,32 +1,37 @@
 package com.felipe.reto1_appsmoviles;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 
 public class AddPlaceFragment extends Fragment implements  View.OnClickListener, MapFragment.OnMapListener {
 
 
     private ImageButton btnPinMap;
-    private TextView latlongTV;
+    private TextView adressTV;
     private Button btnRegister;
 
     private MainActivity mainActivity;
-    private String latlong;
-    private OnAddListener observer;
+    private String address;
+    private ArrayList<Place> places;
 
 
 
@@ -61,14 +66,12 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
         btnPinMap.setOnClickListener(this);
         btnRegister = root.findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(this);
-        latlongTV = root.findViewById(R.id.latlongTV);
-        latlongTV.setText(latlong);
+        adressTV = root.findViewById(R.id.adressTV);
+//        latlongTV.setText(latlong);
+        loadPlaces();
         return root;
     }
 
-    public void setObserver(OnAddListener observer) {
-        this.observer = observer;
-    }
 
     @Override
     public void onClick(View v) {
@@ -80,21 +83,35 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
 
                 break;
             case R.id.btnRegister:
-                observer.onNewPlace("hola neuv","69");
+                places.add(new Place("hola neuv","69"));
+                Gson gson = new Gson();
+                String json = gson.toJson(places);
+                SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
+                preferences.edit().putString("placesList", json).apply();
                 break;
         }
 
     }
 
     @Override
-    public void onNewMarker(LatLng latLng) {
-        latlong = "latitude "+latLng.latitude+ " longitude "+latLng.longitude;
+    public void onNewMarker(LatLng latLng, String address) {
+
+//        latlong = "latitude "+latLng.latitude+ " longitude "+latLng.longitude;
         mainActivity.showFragment(this);
     }
 
+    public void loadPlaces(){
 
-
-    public interface OnAddListener{
-        void onNewPlace(String name, String rate);
+        Gson gson = new Gson();
+        SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
+        String json = preferences.getString("placesList", "NO_OBJ");
+        if (!json.equals("NO_OBJ")){
+            Type arrayListTypeToken = new TypeToken<ArrayList<Place>>(){}.getType();
+            places = gson.fromJson(json, arrayListTypeToken);
+        }
+        else{
+            Log.e(">>>","Inicializo AL");
+            places = new ArrayList<>();
+        }
     }
 }

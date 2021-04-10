@@ -1,5 +1,7 @@
 package com.felipe.reto1_appsmoviles;
 
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class SearchPlacesAdapter extends RecyclerView.Adapter<PlaceView> {
+public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
 
     private ArrayList<Place> places;
 
-    public SearchPlacesAdapter() {
-        places = new ArrayList<>();
-        places.add(new Place("Estadio Pascual Guerrero", "4.0"));
-        //places.add(new Place("Tardes Caleñas", "4.0"));
+    public PlacesAdapter() {
+
+//        places.add(new Place("Estadio Pascual Guerrero", "4.0"));
+//        places.add(new Place("Tardes Caleñas", "4.0"));
     }
 
-    public void addPlace(String name, String rate){
-        places.add(new Place(name, rate));
-        this.notifyDataSetChanged();
-    }
+//    public void addPlace(String name, String rate){
+//        places.add(new Place(name, rate));
+//        this.notifyDataSetChanged();
+//
+//        Log.e(">>>","actualicé "+places.size()+"nombre "+name);
+//    }
 
     @NonNull
     @Override
@@ -50,5 +54,9 @@ public class SearchPlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     @Override
     public int getItemCount() {
         return places.size();
+    }
+
+    public void setPlaces(ArrayList<Place> places) {
+        this.places = places;
     }
 }

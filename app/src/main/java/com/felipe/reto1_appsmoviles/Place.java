@@ -3,8 +3,9 @@ package com.felipe.reto1_appsmoviles;
 public class Place {
     private String name;
     private String rate;
-    private String longitud;
-    private String latitud;
+    private double longitude;
+    private double latitud;
+    private String address;
 
     public Place(String name, String rate) {
         this.name = name;
@@ -27,19 +28,19 @@ public class Place {
         this.rate = rate;
     }
 
-    public String getLongitud() {
-        return longitud;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongitud(String longitud) {
-        this.longitud = longitud;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public String getLatitud() {
+    public double getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(String latitud) {
+    public void setLatitud(double latitud) {
         this.latitud = latitud;
     }
 }

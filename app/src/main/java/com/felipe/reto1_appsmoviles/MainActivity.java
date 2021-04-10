@@ -8,14 +8,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AddPlaceFragment addplace;
+    private AddPlaceFragment addPlace;
     private MapFragment mapFragment;
     private SearchPlacesFragment searchPlacesFragment;
     private BottomNavigationView navigator;
@@ -42,19 +41,18 @@ public class MainActivity extends AppCompatActivity {
 
 
             searchPlacesFragment = SearchPlacesFragment.newInstance();
-            addplace = AddPlaceFragment.newInstance();
-            addplace.setMainActivity(this);
-            addplace.setObserver(searchPlacesFragment);
+            addPlace = AddPlaceFragment.newInstance();
+            addPlace.setMainActivity(this);
             mapFragment = MapFragment.newInstance();
-            mapFragment.setObserver(addplace);
-            showFragment(addplace);
+            mapFragment.setObserver(addPlace);
+            showFragment(addPlace);
 
 
             navigator.setOnNavigationItemSelectedListener(
                     (menuItem ) ->{
                         switch (menuItem.getItemId()){
                             case R.id.newPlace:
-                                showFragment(addplace);
+                                showFragment(addPlace);
                                 break;
                             case R.id.map:
                                 showFragment(mapFragment);
