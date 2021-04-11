@@ -89,6 +89,9 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
                 SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
                 preferences.edit().putString("placesList", json).apply();
                 break;
+
+            case R.id.imageView:
+
         }
 
     }

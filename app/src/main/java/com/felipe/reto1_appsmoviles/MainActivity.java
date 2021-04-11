@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private SearchPlacesFragment searchPlacesFragment;
     private BottomNavigationView navigator;
+    public static final int PERMISSIONS_CALLBACK = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +27,16 @@ public class MainActivity extends AppCompatActivity {
         navigator = findViewById(R.id.navigator);
 
         ActivityCompat.requestPermissions(this, new String []{ //Ask for permissions
-                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-        }, 11);
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+        }, PERMISSIONS_CALLBACK);
 
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 11){
+        if(requestCode == PERMISSIONS_CALLBACK){
             //Intent intent = new Intent(this, MapsActivity.class);
             //startActivity(intent);
 
