@@ -82,18 +82,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         loadPlaces();
         initLocation();
 
-        for (int i = 0; i < 0; i++){
-            Place place = places.get(i);
-            LatLng latlng = new LatLng(place.getLatitude(), place.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latlng).title(place.getName()));
-        }
-
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
-//        myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
+        myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
+        for (int i = 0; i < places.size(); i++){
+            Place place = places.get(i);
+            LatLng latlng = new LatLng(place.getLatitude(), place.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latlng).title(place.getName()));
+        }
         mMap.setOnMapLongClickListener(this);
     }
     @SuppressLint("MissingPermission")
