@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,9 +25,12 @@ import java.util.ArrayList;
  * Use the {@link SearchPlacesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchPlacesFragment extends Fragment {
+public class SearchPlacesFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private RecyclerView placesViewList;
+    private SearchView searchView;
+
+
     private PlacesAdapter adapter;
 
     private ArrayList<Place> places;
@@ -55,10 +59,13 @@ public class SearchPlacesFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         placesViewList.setLayoutManager(layoutManager);
 
+        searchView = root.findViewById(R.id.searchView);
+
         adapter = new PlacesAdapter();
         loadPlaces();
         adapter.setPlaces(places);
         placesViewList.setAdapter(adapter);
+
 
         places = new ArrayList<>();
         return root;
@@ -76,5 +83,15 @@ public class SearchPlacesFragment extends Fragment {
             Log.e(">>>","Inicializo AL SP");
             places = new ArrayList<>();
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

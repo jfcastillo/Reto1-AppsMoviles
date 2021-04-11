@@ -17,8 +17,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="64dp"
             android:layout_marginTop="19dp"
-            android:layout_marginEnd="29dp"
+            android:layout_marginEnd="25dp"
             android:layout_marginBottom="16dp"
+            android:background="@drawable/circle_border"
             android:text="Desde cámara"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/openGalleryBtn"
@@ -29,12 +30,15 @@
             android:id="@+id/openGalleryBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="19dp"
             android:layout_marginEnd="64dp"
             android:layout_marginBottom="16dp"
+            android:background="@drawable/circle_border"
             android:text="Desde galería"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/openCameraBtn"
             app:layout_constraintTop_toBottomOf="@+id/mensajeCamaraGaleria" />
 
         <TextView

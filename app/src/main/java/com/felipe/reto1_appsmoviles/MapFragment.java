@@ -3,6 +3,8 @@ package com.felipe.reto1_appsmoviles;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -48,6 +51,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private TextView placeNameTextView;
     private TextView addressPlaceTextView;
     private RatingBar ratingBar;
+    private ImageView imageViewPlace;
     private GoogleMap mMap;
     private LocationManager locationManager;
     private Marker myMarker;
@@ -82,6 +86,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         addressPlaceTextView = view.findViewById(R.id.addressPlaceTextView);
         ratingBar = view.findViewById(R.id.ratingBar);
         ratingBar.setOnRatingBarChangeListener(this);
+        imageViewPlace = view.findViewById(R.id.imageViewPlace);
 
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         return view;
@@ -191,6 +196,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 layoutInfoPlace.setVisibility(View.VISIBLE);
                 placeNameTextView.setText(place.getName());
                 addressPlaceTextView.setText(place.getAddress());
+                Bitmap image = BitmapFactory.decodeFile(place.getPhotoPath());
+                imageViewPlace.setImageBitmap(image);
                 if (place.getRate() > 0){
                     ratingBar.setRating(place.getRate());
                 }
