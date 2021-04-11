@@ -2,6 +2,7 @@ package com.felipe.reto1_appsmoviles;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,8 +25,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -39,6 +44,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private Marker myMarker;
 
     private OnMapListener observer;
+    private ArrayList<Place> places;
 
     public MapFragment() {
         // Required empty public constructor
@@ -73,14 +79,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
+        loadPlaces();
         initLocation();
+
+        for (int i = 0; i < 0; i++){
+            Place place = places.get(i);
+            LatLng latlng = new LatLng(place.getLatitude(), place.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latlng).title(place.getName()));
+        }
 
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
-        myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
+//        myMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(0,0)));
         mMap.setOnMapLongClickListener(this);
     }
     @SuppressLint("MissingPermission")
@@ -132,6 +145,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             e.printStackTrace();
         }
 
+    }
+    public void loadPlaces(){
+
+        Gson gson = new Gson();
+        SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
+        String json = preferences.getString("placesList", "NO_OBJ");
+        if (!json.equals("NO_OBJ")){
+            Type arrayListTypeToken = new TypeToken<ArrayList<Place>>(){}.getType();
+            places = gson.fromJson(json, arrayListTypeToken);
+        }
+        else{
+            Log.e(">>>","Inicializo AL SP");
+            places = new ArrayList<>();
+        }
     }
     public interface OnMapListener{
         void onNewMarker(LatLng latLng, String address);

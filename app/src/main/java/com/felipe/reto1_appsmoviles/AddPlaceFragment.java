@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,10 +27,12 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
 
 
     private ImageButton btnPinMap;
-    private TextView adressTV;
+    private TextView addressTV;
     private Button btnRegister;
+    private EditText editTextNamePlace;
 
     private MainActivity mainActivity;
+    private LatLng latlong;
     private String address;
     private ArrayList<Place> places;
 
@@ -39,16 +42,10 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
         // Required empty public constructor
     }
 
-
-    public MainActivity getMainActivity() {
-        return mainActivity;
-    }
-
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
-    // TODO: Rename and change types and number of parameters
     public static AddPlaceFragment newInstance() {
         AddPlaceFragment fragment = new AddPlaceFragment();
         Bundle args = new Bundle();
@@ -66,8 +63,9 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
         btnPinMap.setOnClickListener(this);
         btnRegister = root.findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(this);
-        adressTV = root.findViewById(R.id.adressTV);
-//        latlongTV.setText(latlong);
+        addressTV = root.findViewById(R.id.adressTV);
+        addressTV.setText(address);
+        editTextNamePlace = root.findViewById(R.id.editTextNamePlace);
         loadPlaces();
         return root;
     }
@@ -83,7 +81,12 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
 
                 break;
             case R.id.btnRegister:
-                places.add(new Place("hola neuv","69"));
+                String name = editTextNamePlace.getText().toString();
+                Log.e(">>>","Nombre "+name);
+                double latitude = latlong.latitude;
+                double longitude = latlong.longitude;
+
+                places.add(new Place(name, 4.0, longitude, latitude, address));
                 Gson gson = new Gson();
                 String json = gson.toJson(places);
                 SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
@@ -99,7 +102,8 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
     @Override
     public void onNewMarker(LatLng latLng, String address) {
 
-//        latlong = "latitude "+latLng.latitude+ " longitude "+latLng.longitude;
+        latlong = latLng;
+        this.address = address;
         mainActivity.showFragment(this);
     }
 
