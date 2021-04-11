@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -23,13 +24,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
-public class AddPlaceFragment extends Fragment implements  View.OnClickListener, MapFragment.OnMapListener {
+public class AddPlaceFragment extends Fragment implements  View.OnClickListener, MapFragment.OnMapListener, CameraGallerySelectionDialog.onAddImageListener {
 
 
     private ImageButton btnPinMap;
     private TextView addressTV;
     private Button btnRegister;
     private EditText editTextNamePlace;
+    private ImageButton btnAddImage;
+    private CameraGallerySelectionDialog imageDialog;
 
     private MainActivity mainActivity;
     private LatLng latlong;
@@ -59,6 +62,9 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_add_place, container, false);
+
+        btnAddImage = root.findViewById(R.id.addImage);
+        btnAddImage.setOnClickListener(this);
         btnPinMap = root.findViewById(R.id.btnPinMap);
         btnPinMap.setOnClickListener(this);
         btnRegister = root.findViewById(R.id.btnRegister);
@@ -93,7 +99,12 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
                 preferences.edit().putString("placesList", json).apply();
                 break;
 
-            //case R.id.imageView:
+            case R.id.addImage:
+                imageDialog = CameraGallerySelectionDialog.newInstance();
+                imageDialog.setListener(this);
+                imageDialog.show(getChildFragmentManager(), "Selection image dialog");
+
+                break;
 
         }
 
@@ -120,5 +131,12 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
             Log.e(">>>","Inicializo AL");
             places = new ArrayList<>();
         }
+    }
+
+    @Override
+    public void onAddImage() {
+        imageDialog.dismiss();
+
+
     }
 }
