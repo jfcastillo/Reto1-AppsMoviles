@@ -2,13 +2,16 @@ package com.felipe.reto1_appsmoviles;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +20,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -34,8 +41,8 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
    private Button cameraBtn;
    private onAddImageListener listener;
 
-   private File filePhotoCamera;
-   private String pathPhotoGallery;
+   private File filePhoto;
+   private String pathPhoto;
 
     public CameraGallerySelectionDialog() {
         // Required empty public constructor
@@ -73,14 +80,18 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
         void onAddImage();
     }
 
+    public String getPathPhoto() {
+        return pathPhoto;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.openCameraBtn:
                 Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                filePhotoCamera = new File(getActivity().getExternalFilesDir(null)+ "/photo.png");
-                Log.e(">>>",""+filePhotoCamera);
-                Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName(), filePhotoCamera);
+                filePhoto = new File(getActivity().getExternalFilesDir(null)+ "/photo.png");
+                Log.e(">>>",""+filePhoto);
+                Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName(), filePhoto);
                 openCamera.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
 
@@ -98,17 +109,44 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
 
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CAMERA_CALLBACK && resultCode == RESULT_OK){
             Log.e(">>>","Hola, tome la foto creo");
+            pathPhoto = filePhoto.getPath();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                copyPhoto(pathPhoto, "app/src/main/res/places-photos");
+            }
+            else{
+                Log.e(">>>","The API required is "+ Build.VERSION_CODES.Q);
+            }
 
         }
         else if(requestCode == GALLERY_CALLBACK && requestCode == RESULT_OK){
             Uri uri = data.getData();
-            pathPhotoGallery = UtilDomi.getPath(getContext(), uri);
+            pathPhoto = UtilDomi.getPath(getContext(), uri);
+            Log.e(">>>",""+pathPhoto);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                copyPhoto(pathPhoto, "app/src/main/res/places-photos");
+            }
+            else{
+                Log.e(">>>","The API required is "+ Build.VERSION_CODES.Q);
+            }
 
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public void copyPhoto(String sourcePath, String destinyPath){
+        try (FileInputStream source = new FileInputStream(sourcePath)) {
+            FileOutputStream destiny = new FileOutputStream(destinyPath);
+            FileUtils.copy(source, destiny);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

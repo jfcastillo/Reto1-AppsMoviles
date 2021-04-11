@@ -1,6 +1,8 @@
 package com.felipe.reto1_appsmoviles;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,8 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public void onBindViewHolder(@NonNull PlaceView holder, int position) {
         holder.getName().setText(places.get(position).getName());
         holder.getRate().setText(places.get(position).getRate()+"");
+        Bitmap image = BitmapFactory.decodeFile(places.get(position).getPhotoPath());
+        holder.getImage().setImageBitmap(image);
 
     }
 

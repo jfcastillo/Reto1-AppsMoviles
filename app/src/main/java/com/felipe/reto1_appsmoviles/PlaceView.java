@@ -24,6 +24,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
         this.root = root;
         name = root.findViewById(R.id.nameTextView);
         rate = root.findViewById(R.id.rateTextView);
+        image = root.findViewById(R.id.placeImage);
     }
 
     public ConstraintLayout getRoot() {
@@ -41,4 +42,5 @@ public class PlaceView extends RecyclerView.ViewHolder {
     public TextView getRate() {
         return rate;
     }
+
 }
