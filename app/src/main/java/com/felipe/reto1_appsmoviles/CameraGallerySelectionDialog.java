@@ -42,7 +42,6 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
    private onAddImageListener listener;
 
    private File filePhoto;
-   private String pathPhoto;
 
     public CameraGallerySelectionDialog() {
         // Required empty public constructor
@@ -77,11 +76,7 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
     }
 
     public interface onAddImageListener{
-        void onAddImage();
-    }
-
-    public String getPathPhoto() {
-        return pathPhoto;
+        void onAddImage(String imagePath);
     }
 
     @Override
@@ -90,13 +85,9 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
             case R.id.openCameraBtn:
                 Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 filePhoto = new File(getActivity().getExternalFilesDir(null)+ "/photo.png");
-                Log.e(">>>",""+filePhoto);
                 Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName(), filePhoto);
                 openCamera.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
-
                 startActivityForResult(openCamera, CAMERA_CALLBACK);
-
                 break;
 
             case R.id.openGalleryBtn:
@@ -114,8 +105,8 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == CAMERA_CALLBACK && resultCode == RESULT_OK){
-            Log.e(">>>","Hola, tome la foto creo");
-            pathPhoto = filePhoto.getPath();
+            listener.onAddImage(filePhoto.getPath());
+            String pathPhoto = filePhoto.getPath();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 copyPhoto(pathPhoto, "app/src/main/res/places-photos");
             }
@@ -124,10 +115,11 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
             }
 
         }
-        else if(requestCode == GALLERY_CALLBACK && requestCode == RESULT_OK){
+        else if(requestCode == GALLERY_CALLBACK && resultCode == RESULT_OK){
             Uri uri = data.getData();
-            pathPhoto = UtilDomi.getPath(getContext(), uri);
-            Log.e(">>>",""+pathPhoto);
+            String pathPhoto = UtilDomi.getPath(getActivity(), uri);
+            listener.onAddImage(pathPhoto);
+            Log.e(">>>","rutaaa: "+pathPhoto);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 copyPhoto(pathPhoto, "app/src/main/res/places-photos");
             }

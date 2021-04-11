@@ -39,6 +39,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
     private String address;
     private ArrayList<Place> places;
 
+    private String cameraGalleyImage;
 
 
     public AddPlaceFragment() {
@@ -92,7 +93,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
                 double latitude = latlong.latitude;
                 double longitude = latlong.longitude;
 
-                places.add(new Place(name, (float)4.0, longitude, latitude, address, imageDialog.getPathPhoto()));
+                places.add(new Place(name, (float)4.0, longitude, latitude, address, cameraGalleyImage));
                 Gson gson = new Gson();
                 String json = gson.toJson(places);
                 SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
@@ -134,8 +135,10 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
     }
 
     @Override
-    public void onAddImage() {
+    public void onAddImage(String imagePath) {
         imageDialog.dismiss();
+        cameraGalleyImage = imagePath;
+
 
 
     }

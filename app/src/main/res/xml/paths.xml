@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-files-path
+    <external-path
         name="/storage/emulated/0"
         path="/Android/data/com.felipe.reto1_appsmoviles/files"/>
 </paths>
