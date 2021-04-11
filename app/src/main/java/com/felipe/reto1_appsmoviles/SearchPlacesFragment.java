@@ -56,22 +56,25 @@ public class SearchPlacesFragment extends Fragment {
         placesViewList.setLayoutManager(layoutManager);
 
         adapter = new PlacesAdapter();
-        Gson gson = new Gson();
-        SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
-        String json = preferences.getString("placesList", "NO_OBJ");
-        if (!json.equals("NO_OBJ")){
-            Type arrayListTypeToken = new TypeToken<ArrayList<Place>>(){}.getType();
-            places = gson.fromJson(json, (Type) arrayListTypeToken);
-        }
-        else{
-            Log.e(">>>","Inicializo AL SearchPlace");
-            places = new ArrayList<>();
-        }
-        Log.e(">>>","Tamaño palces "+ places.size());
+        loadPlaces();
         adapter.setPlaces(places);
         placesViewList.setAdapter(adapter);
 
         places = new ArrayList<>();
         return root;
+    }
+    public void loadPlaces(){
+
+        Gson gson = new Gson();
+        SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
+        String json = preferences.getString("placesList", "NO_OBJ");
+        if (!json.equals("NO_OBJ")){
+            Type arrayListTypeToken = new TypeToken<ArrayList<Place>>(){}.getType();
+            places = gson.fromJson(json, arrayListTypeToken);
+        }
+        else{
+            Log.e(">>>","Inicializo AL SP");
+            places = new ArrayList<>();
+        }
     }
 }
