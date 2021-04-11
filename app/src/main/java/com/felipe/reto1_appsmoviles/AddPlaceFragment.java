@@ -93,7 +93,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
                 preferences.edit().putString("placesList", json).apply();
                 break;
 
-            case R.id.imageView:
+            //case R.id.imageView:
 
         }
 
