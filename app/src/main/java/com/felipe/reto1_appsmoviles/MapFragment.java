@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +30,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -37,14 +41,20 @@ import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, RatingBar.OnRatingBarChangeListener {
 
+
+    private ConstraintLayout layoutInfoPlace;
+    private TextView placeNameTextView;
+    private TextView addressPlaceTextView;
+    private RatingBar ratingBar;
     private GoogleMap mMap;
     private LocationManager locationManager;
     private Marker myMarker;
 
     private OnMapListener observer;
     private ArrayList<Place> places;
+    private int nearestPlaceIndex;
 
     public MapFragment() {
         // Required empty public constructor
@@ -67,6 +77,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mapFragment.getMapAsync(this); // ?
         // Inflate the layout for this fragment
         //locationManager = (LocationManager)  this.getSystemService(LOCATION_SERVICE); //Esta chimbada solo es cuando es una Activity
+        layoutInfoPlace = view.findViewById(R.id.layoutPlaceInfo);
+        placeNameTextView = view.findViewById(R.id.placeNameTextView);
+        addressPlaceTextView = view.findViewById(R.id.addressPlaceTextView);
+        ratingBar = view.findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(this);
 
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         return view;
@@ -100,10 +115,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 2, new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+//                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+//                mMap.addMarker(new MarkerOptions().position(pos));
+//                myMarker.setPosition(pos);
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+
                 LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(pos));
                 myMarker.setPosition(pos);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+                computeDistances();
             }
 
 
@@ -159,6 +179,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             places = new ArrayList<>();
         }
     }
+
+    public void computeDistances(){
+        for (int i = 0; i < places.size(); i++){
+            Place place = places.get(i);
+            LatLng placeLocation = new LatLng(place.getLatitude(), place.getLongitude());
+            LatLng myLocation = myMarker.getPosition();
+            double meters = SphericalUtil.computeDistanceBetween(placeLocation, myLocation);
+            if (meters < 100){
+                nearestPlaceIndex = i;
+                layoutInfoPlace.setVisibility(View.VISIBLE);
+                placeNameTextView.setText(place.getName());
+                addressPlaceTextView.setText(place.getAddress());
+                if (place.getRate() > 0){
+                    ratingBar.setRating(place.getRate());
+                }
+
+            }
+            else{
+                layoutInfoPlace.setVisibility(View.INVISIBLE);
+                nearestPlaceIndex = -1;
+            }
+        }
+
+    }
+
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        if (nearestPlaceIndex >= 0){
+            places.get(nearestPlaceIndex).setRate(rating);
+            Gson gson = new Gson();
+            String json = gson.toJson(places);
+            SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
+            preferences.edit().putString("placesList", json).apply();
+
+        }
+    }
+
     public interface OnMapListener{
         void onNewMarker(LatLng latLng, String address);
     }

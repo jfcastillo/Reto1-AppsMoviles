@@ -86,7 +86,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
                 double latitude = latlong.latitude;
                 double longitude = latlong.longitude;
 
-                places.add(new Place(name, 4.0, longitude, latitude, address));
+                places.add(new Place(name, (float)4.0, longitude, latitude, address));
                 Gson gson = new Gson();
                 String json = gson.toJson(places);
                 SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);

@@ -2,17 +2,17 @@ package com.felipe.reto1_appsmoviles;
 
 public class Place {
     private String name;
-    private double rate;
+    private float rate;
     private double longitude;
     private double latitude;
     private String address;
 
-    public Place(String name, double rate) {
+    public Place(String name, float rate) {
         this.name = name;
         this.rate = rate;
     }
 
-    public Place(String name, double rate, double longitude, double latitude, String address) {
+    public Place(String name, float rate, double longitude, double latitude, String address) {
         this.name = name;
         this.rate = rate;
         this.longitude = longitude;
@@ -28,11 +28,11 @@ public class Place {
         this.name = name;
     }
 
-    public double getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate(double rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 
@@ -50,5 +50,13 @@ public class Place {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
