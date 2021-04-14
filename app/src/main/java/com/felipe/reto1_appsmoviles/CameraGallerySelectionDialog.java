@@ -1,17 +1,18 @@
 package com.felipe.reto1_appsmoviles;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.os.FileUtils;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,10 +21,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -94,7 +93,6 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
                 Intent openGallery = new Intent(Intent.ACTION_GET_CONTENT);
                 openGallery.setType("image/*");
                 startActivityForResult(openGallery, GALLERY_CALLBACK);
-
                 break;
         }
 
@@ -107,12 +105,7 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
         if(requestCode == CAMERA_CALLBACK && resultCode == RESULT_OK){
             listener.onAddImage(filePhoto.getPath());
             String pathPhoto = filePhoto.getPath();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                copyPhoto(pathPhoto, "app/src/main/res/places-photos");
-            }
-            else{
-                Log.e(">>>","The API required is "+ Build.VERSION_CODES.Q);
-            }
+            saveImageToExternalStorage(BitmapFactory.decodeFile(pathPhoto));
 
         }
         else if(requestCode == GALLERY_CALLBACK && resultCode == RESULT_OK){
@@ -120,25 +113,45 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
             String pathPhoto = UtilDomi.getPath(getActivity(), uri);
             listener.onAddImage(pathPhoto);
             Log.e(">>>","rutaaa: "+pathPhoto);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                copyPhoto(pathPhoto, "app/src/main/res/places-photos");
-            }
-            else{
-                Log.e(">>>","The API required is "+ Build.VERSION_CODES.Q);
-            }
+            saveImageToExternalStorage(BitmapFactory.decodeFile(pathPhoto));
+
 
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void copyPhoto(String sourcePath, String destinyPath){
-        try (FileInputStream source = new FileInputStream(sourcePath)) {
-            FileOutputStream destiny = new FileOutputStream(destinyPath);
-            FileUtils.copy(source, destiny);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+    //Copy files
+    private void saveImageToExternalStorage(Bitmap finalBitmap) {
+        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        File myDir = new File(root + "/saved_images");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-" + n + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists())
+            file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        // Tell the media scanner about the new file so that it is
+        // immediately available to the user.
+        MediaScannerConnection.scanFile(getActivity(), new String[] { file.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
+
     }
+
 }

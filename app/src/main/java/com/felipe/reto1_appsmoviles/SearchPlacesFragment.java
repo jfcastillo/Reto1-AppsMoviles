@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -60,14 +61,13 @@ public class SearchPlacesFragment extends Fragment implements SearchView.OnQuery
         placesViewList.setLayoutManager(layoutManager);
 
         searchView = root.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(this);
 
         adapter = new PlacesAdapter();
         loadPlaces();
         adapter.setPlaces(places);
         placesViewList.setAdapter(adapter);
 
-
-        places = new ArrayList<>();
         return root;
     }
     public void loadPlaces(){
@@ -85,6 +85,24 @@ public class SearchPlacesFragment extends Fragment implements SearchView.OnQuery
         }
     }
 
+    private void filter(String text) {
+        ArrayList<Place> filteredlist = new ArrayList<>();
+
+        for (Place item : places) {
+            // checking if the entered string matched with any item of our recycler view.
+            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                filteredlist.add(item);
+            }
+        }
+        if (filteredlist.isEmpty()) {
+            Toast.makeText(getActivity(), "No hay lugares para mostrar", Toast.LENGTH_SHORT).show();
+        } else {
+            adapter.filterList(filteredlist);
+        }
+    }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -92,6 +110,7 @@ public class SearchPlacesFragment extends Fragment implements SearchView.OnQuery
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        filter(newText);
         return false;
     }
 }

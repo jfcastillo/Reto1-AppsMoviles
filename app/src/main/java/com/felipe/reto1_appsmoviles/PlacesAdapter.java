@@ -63,4 +63,9 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public void setPlaces(ArrayList<Place> places) {
         this.places = places;
     }
+
+    public void filterList(ArrayList<Place> filterllist) {
+        places = filterllist;
+        notifyDataSetChanged();
+    }
 }
