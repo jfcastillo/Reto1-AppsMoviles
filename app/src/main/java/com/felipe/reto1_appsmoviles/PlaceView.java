@@ -1,6 +1,7 @@
 package com.felipe.reto1_appsmoviles;
 
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
     private ImageView image;
     private TextView name;
     private TextView rate;
+    private ImageButton btnMapPlace;
 
 
 
@@ -25,6 +27,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
         name = root.findViewById(R.id.nameTextView);
         rate = root.findViewById(R.id.rateTextView);
         image = root.findViewById(R.id.placeImage);
+        btnMapPlace = root.findViewById(R.id.btnMapButton);
     }
 
     public ConstraintLayout getRoot() {
@@ -42,5 +45,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
     public TextView getRate() {
         return rate;
     }
+
+    public ImageButton getBtnMapPlace(){return btnMapPlace;}
 
 }

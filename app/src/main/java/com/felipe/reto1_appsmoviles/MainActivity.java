@@ -40,14 +40,13 @@ public class MainActivity extends AppCompatActivity {
             //Intent intent = new Intent(this, MapsActivity.class);
             //startActivity(intent);
 
-
-
-            searchPlacesFragment = SearchPlacesFragment.newInstance();
             addPlace = AddPlaceFragment.newInstance();
             addPlace.setMainActivity(this);
             mapFragment = MapFragment.newInstance();
             mapFragment.setObserver(addPlace);
-            showFragment(addPlace);
+            searchPlacesFragment = SearchPlacesFragment.newInstance();
+            searchPlacesFragment.setMainActivity(this);
+            showFragment(mapFragment);
 
 
             navigator.setOnNavigationItemSelectedListener(

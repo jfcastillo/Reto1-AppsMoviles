@@ -31,7 +31,7 @@ public class SearchPlacesFragment extends Fragment implements SearchView.OnQuery
     private RecyclerView placesViewList;
     private SearchView searchView;
 
-
+    private MainActivity mainActivity;
     private PlacesAdapter adapter;
 
     private ArrayList<Place> places;
@@ -41,6 +41,9 @@ public class SearchPlacesFragment extends Fragment implements SearchView.OnQuery
         // Required empty public constructor
     }
 
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     public static SearchPlacesFragment newInstance() {
         SearchPlacesFragment fragment = new SearchPlacesFragment();
@@ -66,6 +69,8 @@ public class SearchPlacesFragment extends Fragment implements SearchView.OnQuery
         adapter = new PlacesAdapter();
         loadPlaces();
         adapter.setPlaces(places);
+        adapter.setObserver(this.mainActivity.getMapFragment());
+        adapter.setMainActivity(this.mainActivity);
         placesViewList.setAdapter(adapter);
 
         return root;

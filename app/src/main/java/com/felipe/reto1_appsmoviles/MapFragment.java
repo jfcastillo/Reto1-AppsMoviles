@@ -44,7 +44,7 @@ import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, RatingBar.OnRatingBarChangeListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, RatingBar.OnRatingBarChangeListener, PlacesAdapter.onClickMapPlaceButton, LocationListener {
 
 
     private ConstraintLayout layoutInfoPlace;
@@ -117,45 +117,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
     @SuppressLint("MissingPermission")
     public void initLocation(){
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 2, new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-//                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-//                mMap.addMarker(new MarkerOptions().position(pos));
-//                myMarker.setPosition(pos);
-//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
-
-                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                myMarker.setPosition(pos);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
-                computeDistances();
-            }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 2, this);
 
 
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
 
-            }
-
-            @Override
-            public void onProviderEnabled(@NonNull String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(@NonNull String provider) {
-
-            }
-
-            public void updateMyLocation(Location loc){
-
-            }
-        });
-
-
-
-        }
+    }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
@@ -223,6 +190,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
+    @Override
+    public void showOnMap(LatLng pos) {
+        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+        //CameraUpdateFactory.newLatLngZoom(pos, 16);
+        float zoomLevel = 16.0f; //This goes up to 21
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, zoomLevel));
+
+    }
+
     public interface OnMapListener{
         void onNewMarker(LatLng latLng, String address);
     }
@@ -230,4 +208,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void setObserver(OnMapListener observer) {
         this.observer = observer;
     }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+//                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+//                mMap.addMarker(new MarkerOptions().position(pos));
+//                myMarker.setPosition(pos);
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+
+        //LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+        //myMarker.setPosition(pos);
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+        computeDistances();
+    }
+
+
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+
+    }
+
+
 }
