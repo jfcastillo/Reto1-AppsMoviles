@@ -26,16 +26,9 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
     public PlacesAdapter() {
 
 
-//        places.add(new Place("Estadio Pascual Guerrero", "4.0"));
-//        places.add(new Place("Tardes Caleñas", "4.0"));
     }
 
-//    public void addPlace(String name, String rate){
-//        places.add(new Place(name, rate));
-//        this.notifyDataSetChanged();
-//
-//        Log.e(">>>","actualicé "+places.size()+"nombre "+name);
-//    }
+
 
 
     public void setObserver(MapFragment observer) {
@@ -58,17 +51,20 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
 
     @Override
     public void onBindViewHolder(@NonNull PlaceView holder, int position) {
-        holder.getName().setText(places.get(position).getName());
-        holder.getRate().setText(places.get(position).getRate()+"");
-        Bitmap image = BitmapFactory.decodeFile(places.get(position).getPhotoPath());
+        Place place = places.get(position);
+        holder.getName().setText(place.getName());
+        holder.getRate().setText(place.getRate()+"");
+        Bitmap image = BitmapFactory.decodeFile(place.getPhotoPath());
         holder.getImage().setImageBitmap(image);
 
         holder.getBtnMapPlace().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.showFragment(mainActivity.getMapFragment());
-                LatLng pos = new LatLng(places.get(position).getLatitude(), places.get(position).getLongitude());
+
+                LatLng pos = new LatLng(place.getLatitude(), place.getLongitude());
                 observer.showOnMap(pos);
+                mainActivity.showFragment(mainActivity.getMapFragment());
+
 
 
             }

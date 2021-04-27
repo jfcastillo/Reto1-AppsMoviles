@@ -36,10 +36,12 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
 
     private MainActivity mainActivity;
     private LatLng latlong;
-    private String address;
+
     private ArrayList<Place> places;
 
     private String cameraGalleyImage;
+    private String address;
+    private String namePlace;
 
 
     public AddPlaceFragment() {
@@ -73,6 +75,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
         addressTV = root.findViewById(R.id.adressTV);
         addressTV.setText(address);
         editTextNamePlace = root.findViewById(R.id.editTextNamePlace);
+        editTextNamePlace.setText(namePlace);
         loadPlaces();
         return root;
     }
@@ -88,16 +91,18 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
 
                 break;
             case R.id.btnRegister:
-                String name = editTextNamePlace.getText().toString();
-                Log.e(">>>","Nombre "+name);
+                namePlace = editTextNamePlace.getText().toString();
                 double latitude = latlong.latitude;
                 double longitude = latlong.longitude;
-
-                places.add(new Place(name, (float)4.0, longitude, latitude, address, cameraGalleyImage));
+                Log.e(">>>", "Long lat add: "+ longitude+" "+ latitude);
+                places.add(new Place(namePlace, (float)4.0, longitude, latitude, address, cameraGalleyImage));
                 Gson gson = new Gson();
                 String json = gson.toJson(places);
                 SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
                 preferences.edit().putString("placesList", json).apply();
+                Toast.makeText(getContext(), "Se registró el lugar correctamente", Toast.LENGTH_SHORT).show();
+                restartFields();
+
                 break;
 
             case R.id.addImage:
@@ -129,9 +134,15 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
             places = gson.fromJson(json, arrayListTypeToken);
         }
         else{
-            Log.e(">>>","Inicializo AL");
             places = new ArrayList<>();
         }
+    }
+    public void restartFields(){
+
+        namePlace = "";
+        address = "";
+        cameraGalleyImage = "";
+        editTextNamePlace.setText("");
     }
 
     @Override

@@ -130,7 +130,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
         try {
             String address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0);
-            Log.e(">>>","Direccion "+address);
             observer.onNewMarker(latLng, address);
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,7 +146,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             places = gson.fromJson(json, arrayListTypeToken);
         }
         else{
-            Log.e(">>>","Inicializo AL SP");
             places = new ArrayList<>();
         }
     }
@@ -197,7 +195,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
         //CameraUpdateFactory.newLatLngZoom(pos, 16);
         float zoomLevel = 16.0f; //This goes up to 21
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, zoomLevel));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, zoomLevel));
+        myMarker.setPosition(pos);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+        Log.e(">>>", "Long lat map: "+ pos.longitude+" "+ pos.latitude);
+
 
     }
 
@@ -216,9 +218,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 //                myMarker.setPosition(pos);
 //                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
 
-        //LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
         //myMarker.setPosition(pos);
-        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
         computeDistances();
     }
 

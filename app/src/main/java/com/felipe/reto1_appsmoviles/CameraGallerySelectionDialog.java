@@ -23,6 +23,7 @@ import android.widget.Button;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -82,8 +83,9 @@ public class CameraGallerySelectionDialog extends DialogFragment implements View
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.openCameraBtn:
+                String idPhoto = UUID.randomUUID().toString();
                 Intent openCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                filePhoto = new File(getActivity().getExternalFilesDir(null)+ "/photo.png");
+                filePhoto = new File(getActivity().getExternalFilesDir(null)+ "/photo"+idPhoto+".png");
                 Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName(), filePhoto);
                 openCamera.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(openCamera, CAMERA_CALLBACK);
