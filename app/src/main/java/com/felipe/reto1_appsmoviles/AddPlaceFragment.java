@@ -2,6 +2,8 @@ package com.felipe.reto1_appsmoviles;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
     private Button btnRegister;
     private EditText editTextNamePlace;
     private ImageButton btnAddImage;
+    private ImageView placeImageView;
     private CameraGallerySelectionDialog imageDialog;
 
     private MainActivity mainActivity;
@@ -76,6 +80,9 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
         addressTV.setText(address);
         editTextNamePlace = root.findViewById(R.id.editTextNamePlace);
         editTextNamePlace.setText(namePlace);
+        placeImageView = root.findViewById(R.id.placeImageView);
+
+
         loadPlaces();
         return root;
     }
@@ -149,6 +156,10 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
     public void onAddImage(String imagePath) {
         imageDialog.dismiss();
         cameraGalleyImage = imagePath;
+        if (cameraGalleyImage != null && !cameraGalleyImage.equals("")){
+            Bitmap image = BitmapFactory.decodeFile(cameraGalleyImage);
+            placeImageView.setImageBitmap(image);
+        }
 
 
 

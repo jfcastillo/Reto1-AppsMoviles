@@ -44,7 +44,7 @@ import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, RatingBar.OnRatingBarChangeListener, PlacesAdapter.onClickMapPlaceButton, LocationListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, RatingBar.OnRatingBarChangeListener, PlacesAdapter.onClickMapPlaceButton {
 
 
     private ConstraintLayout layoutInfoPlace;
@@ -117,8 +117,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
     @SuppressLint("MissingPermission")
     public void initLocation(){
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 2, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 2, new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+//                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+//                mMap.addMarker(new MarkerOptions().position(pos));
+//                myMarker.setPosition(pos);
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
 
+                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                myMarker.setPosition(pos);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
+                computeDistances();
+            }
+
+
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(@NonNull String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(@NonNull String provider) {
+
+            }
+
+            public void updateMyLocation(Location loc){
+
+            }
+        });
 
 
 
@@ -198,9 +231,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, zoomLevel));
         myMarker.setPosition(pos);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
-        Log.e(">>>", "Long lat map: "+ pos.longitude+" "+ pos.latitude);
-
-
     }
 
     public interface OnMapListener{
@@ -211,35 +241,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         this.observer = observer;
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-//                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-//                mMap.addMarker(new MarkerOptions().position(pos));
-//                myMarker.setPosition(pos);
-//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
 
-        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-        //myMarker.setPosition(pos);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 16));
-        computeDistances();
-    }
-
-
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
-    }
 
 
 }
