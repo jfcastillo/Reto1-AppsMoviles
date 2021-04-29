@@ -59,6 +59,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private OnMapListener observer;
     private ArrayList<Place> places;
     private int nearestPlaceIndex;
+    private SharedPreferences preferences;
 
     public MapFragment() {
         // Required empty public constructor
@@ -117,6 +118,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
     @SuppressLint("MissingPermission")
     public void initLocation(){
+        loadPlaces();
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 2, new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -172,7 +174,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void loadPlaces(){
 
         Gson gson = new Gson();
-        SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
         String json = preferences.getString("placesList", "NO_OBJ");
         if (!json.equals("NO_OBJ")){
             Type arrayListTypeToken = new TypeToken<ArrayList<Place>>(){}.getType();
@@ -189,6 +191,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             LatLng placeLocation = new LatLng(place.getLatitude(), place.getLongitude());
             LatLng myLocation = myMarker.getPosition();
             double meters = SphericalUtil.computeDistanceBetween(placeLocation, myLocation);
+            places.get(i).setDistance(meters);
+
             if (meters < 100){
                 nearestPlaceIndex = i;
                 layoutInfoPlace.setVisibility(View.VISIBLE);
@@ -205,6 +209,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 layoutInfoPlace.setVisibility(View.INVISIBLE);
                 nearestPlaceIndex = -1;
             }
+            Gson gson = new Gson();
+            String json = gson.toJson(places);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("placesList", json);
+            editor.apply();
+
         }
 
     }

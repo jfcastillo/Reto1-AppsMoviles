@@ -41,6 +41,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
     private MainActivity mainActivity;
     private LatLng latlong;
 
+    private SharedPreferences preferences;
     private ArrayList<Place> places;
 
     private String cameraGalleyImage;
@@ -101,12 +102,12 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
                 namePlace = editTextNamePlace.getText().toString();
                 double latitude = latlong.latitude;
                 double longitude = latlong.longitude;
-                Log.e(">>>", "Long lat add: "+ longitude+" "+ latitude);
                 places.add(new Place(namePlace, (float)4.0, longitude, latitude, address, cameraGalleyImage));
                 Gson gson = new Gson();
                 String json = gson.toJson(places);
-                SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
-                preferences.edit().putString("placesList", json).apply();
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("placesList", json);
+                editor.apply();
                 Toast.makeText(getContext(), "Se registró el lugar correctamente", Toast.LENGTH_SHORT).show();
                 restartFields();
 
@@ -134,7 +135,7 @@ public class AddPlaceFragment extends Fragment implements  View.OnClickListener,
     public void loadPlaces(){
 
         Gson gson = new Gson();
-        SharedPreferences preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences("Places", Context.MODE_PRIVATE);
         String json = preferences.getString("placesList", "NO_OBJ");
         if (!json.equals("NO_OBJ")){
             Type arrayListTypeToken = new TypeToken<ArrayList<Place>>(){}.getType();

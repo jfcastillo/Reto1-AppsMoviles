@@ -7,6 +7,7 @@ public class Place {
     private double latitude;
     private String address;
     private String photoPath;
+    private double distance;
 
     public Place(String name, float rate) {
         this.name = name;
@@ -20,6 +21,7 @@ public class Place {
         this.latitude = latitude;
         this.address = address;
         this.photoPath = photoPath;
+        distance = -1;
     }
 
     public String getName() {
@@ -65,4 +67,12 @@ public class Place {
     public String getPhotoPath() { return photoPath;}
 
     public void setPhotoPath(String photoPath) { this.photoPath = photoPath;}
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 }

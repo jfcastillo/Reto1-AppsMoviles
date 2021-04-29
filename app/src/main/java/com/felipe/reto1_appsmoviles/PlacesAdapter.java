@@ -54,9 +54,11 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlaceView> {
         Place place = places.get(position);
         holder.getName().setText(place.getName());
         holder.getRate().setText(place.getRate()+"");
+        if (place.getDistance() >= 0){
+            holder.getDistance().setText("Distancia: "+Math.round(place.getDistance()*100.0)/100.0+"");
+        }
         Bitmap image = BitmapFactory.decodeFile(place.getPhotoPath());
         holder.getImage().setImageBitmap(image);
-
         holder.getBtnMapPlace().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -15,6 +15,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
     private ImageView image;
     private TextView name;
     private TextView rate;
+    private TextView distance;
     private ImageButton btnMapPlace;
 
 
@@ -26,6 +27,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
         this.root = root;
         name = root.findViewById(R.id.nameTextView);
         rate = root.findViewById(R.id.rateTextView);
+        distance = root.findViewById(R.id.distanceTextView);
         image = root.findViewById(R.id.placeImage);
         btnMapPlace = root.findViewById(R.id.btnMapButton);
     }
@@ -48,4 +50,7 @@ public class PlaceView extends RecyclerView.ViewHolder {
 
     public ImageButton getBtnMapPlace(){return btnMapPlace;}
 
+    public TextView getDistance() {
+        return distance;
+    }
 }
